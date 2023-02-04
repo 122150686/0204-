@@ -52,14 +52,78 @@ ABC理念：
 	...
 	person<string,int>p1("孙悟空",999)
 	dd类模板，其实是类的构造函数的模板？
-
+        类模板的意思是这样的：创建了一个模板类T obj，T是啥不知道，obj是啥也不知道。但obj肯定要么是int，要么是float，也可能是个类，比如说自定义的Person类。直到后面发现有一个obj.ShowPerson1。才终于知道这是一个Person类。
+	
+00000000类模板还有4个案例没看，放在这里，先过了。
+	https://blog.csdn.net/jianglij4321/article/details/114230440
+	
 	
 	
 
 
 string类
-标准模板库
+       通过string类学习模板，学习STL，能不能直接学呢？因为string类看不懂啊！
+
+
+
 智能指针模板类
+       3个智能指针模板类:auto_ptr、unique_ptr、shared_ptr,顺便会提一下weak_ptr。其中auto_ptr已经被抛弃了,它是一个过时的产物,我们介绍它只为抛砖引玉。
+       
+       STL中的智能指针auto_ptr
+       1、生命周期结束时，销毁指向的内存空间；
+       2、不能指向堆数组，只能指向堆对象（变量）；
+       3、一片堆空间只属于一个智能指针对象；
+       4、多个智能指针对象不能指向同一片堆空间。
+       
+       注意,所有智能指针类都有一个explicit构造函数,该构造函数将指针作为参数。所以它不会将指针转换成智能指针对象。
+       
+       1、智能指针C++中的自动内存管理的主要手段；
+       2、智能指针在各个平台上都有不同的表现形式；
+       3、智能指针能够尽可能的避免内存相关的问题；
+       4、STL和Qt中都有提供了对智能指针的支持。
+       explicit implicit
+       显示声明，隐式声明
+       https://www.jianshu.com/p/9def113ccfa5
+
+
+
+标准模板库/泛型编程
+ad hoc多态，参数多态
+STL基本概念
+STL(Standard Template Library)，标准模板库
+从广义上分为：容器(containor)、算法(algorithm)、迭代器(iterator)
+容器和算法之间通过迭代器进行无缝衔接
+STL几乎所有的代码都采用了模板类或者模板函数
+STL六大组件
+容器：各种数据结构，如vector、list、deque、set、map等，用来存放数据
+算法：各种常用的算法，如sort、find、copy、for_each等
+迭代器：扮演了容器与算法的胶合剂
+仿函数：行为类似函数，可作为算法的某种策略
+适配器（配接器）：一种用来修饰容器或仿函数或迭代器接口的东西
+空间配置器：负责空间的配置与管理
+容器
+
+容器就是将最广泛的一些数据结构实现出来
+常见的数据结构包括 数组、链表、树、栈、队列、集合、映射表 等
+序列式容器：强调值的排序，序列式容器中的每个元素均有固定的位置
+关联式容器：二叉树结构，各元素之间没有严格的物理顺序关系
+算法
+
+质变算法：运算过程会更改区间内元素的内容，如拷贝、替换、删除等
+非质变算法：运算过程不会更改区间内元素的内容，如查找、计数、遍历等
+迭代器
+
+提供一种方法，使之能够依序寻访某个容器所含的各个元素，而又无需暴露其内部表达方式
+每个容器都有专属的迭代器
+迭代器使用非常类似于指针，初学阶段先理解其为指针
+迭代器种类如下，其中常见的是双向迭代器和随机访问迭代器
+
+
+     见下方案例，非常好的案例。
+
+
+
+
 模板类vector
 泛型编程，迭代器，容器
 算法，算法组
@@ -68,7 +132,7 @@ string类
 
 
 
--------------------------------------------
+---------------------------------------------------------
 虚函数：增加或者去掉virtual，显示结果不同
 
 #include<iostream>
@@ -197,4 +261,206 @@ void main()
 	Person<string, int>p1("孙悟空", 999);
 	p1.showPerson();
 }
+
+
+
+类模板2：
+
+#include <iostream>
+#include <string>
+using namespace std;
+class Person1
+{
+public:
+	void showPerson1()
+	{
+		cout << "Person1 show" << endl;
+	}
+};
+class Person2
+{
+public:
+	void showPerson2()
+	{
+		cout << "Person2 show" << endl;
+	}
+};
+template<class T>
+class Myclass
+{
+public:
+	T obj;
+	//类模板中成员函数
+	void func1()
+	{
+		obj.showPerson1();
+	}
+
+	void func2()
+	{
+		obj.showPerson2();
+	}
+};
+void test01()
+{
+	Myclass<Person1>m;
+	m.func1();
+	//m.func2();
+}
+int main()
+{
+	test01();
+	system("pause");
+
+}
+
+
+类模板3：
+
+类模板对象做函数的参数。类模板对象 做 函数的参数。一共有三种方式，第一种最常用。
+
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+template<class T1, class T2>
+class Person
+{
+public:
+	Person(T1 name, T2 age)
+	{
+		m_name = name;
+		m_age = age;
+	}
+
+	void showperson()
+	{
+		cout << "姓名：" << m_name << "年龄：" << m_age << endl;
+	}
+
+	T1 m_name;
+	T2 m_age;
+};
+
+
+//1、指定传入的类型
+void printPerson1(Person<string, int>& p)
+{
+	p.showperson();
+}
+
+void test01()
+{
+	Person<string, int> p1("孙悟空", 99);
+	printPerson1(p1);
+}
+
+//2、模板参数化
+template<class T1, class T2>
+void printPerson2(Person<T1, T2>& p)
+{
+	p.showperson();
+	cout << "T1的类型为：" << typeid(T1).name() << endl;
+	cout << "T2的类型为：" << typeid(T2).name() << endl;
+}
+void test02()
+{
+	Person<string, int> p2("猪八戒", 88);
+	printPerson2(p2);
+}
+
+//3、整个类模板化
+template<class T>
+void printPerson3(T& p)
+{
+	p.showperson();
+	cout << "T的类型为：" << typeid(T).name() << endl;
+}
+void test03()
+{
+	Person<string, int>p3("唐僧", 77);
+	printPerson3(p3);
+}
+
+
+
+int main()
+{
+	test03();
+	system("pause");
+
+}
+
+------------------------------
+
+泛型编程：
+
+#include <iostream>
+#include <iostream>
+using namespace std;
+template<class T, size_t Size>
+void add(T(&x)[Size], T(&y)[Size], T(&z)[Size])
+{
+	for (size_t i = 0; i < Size; i++)
+	{
+		z[i] = x[i] + y[i];
+		cout<<z[i]<<endl;
+	}
+}
+int main()
+{
+	float a[3] = { 2,4 };
+	float b[3] = { 22,24 };
+	float c[3] = { 23,4444 };
+	add(a,b,c);
+	return 0;
+}
+
+其中add函数本来是长这个样子的：
+void add(int x[2], int y[2], int z[2])
+{
+	z[0] = x[0] + y[0];
+	z[1] = x[1] + y[1];
+}
+或者这样子
+void add(int x[5], int y[5], int z[5])
+{
+	z[0] = x[0] + y[0];
+	z[1] = x[1] + y[1];
+	z[2] = x[2] + y[2];
+	z[3] = x[3] + y[3];
+	z[4] = x[4] + y[4];
+}
+或者把int改为short，long，double等等。
+
+。。。。。。。。
+或者一个暂时还不懂的版本：
+#include <iostream>
+#include <iostream>
+using namespace std;
+template<class T, size_t Size, size_t... Index>
+void add_imp(T(&x)[Size], T(&y)[Size], T(&z)[Size], std::index_sequence<Index...>* p)
+{
+	int Temp[] = { 0, (z[Index] = x[Index] + y[Index], 0)... };
+	(void)Temp;
+}
+
+template<class T, size_t Size>
+void add(T(&x)[Size], T(&y)[Size], T(&z)[Size])
+{
+	add_imp(x, y, z, (std::make_index_sequence<Size>*)0);
+	cout<<z[0]<<endl;
+}
+
+int main()
+{
+	float a[3] = { 2,4 };
+	float b[3] = { 22,24 };
+	float c[3] = { 23,4444 };
+	add(a,b,c);
+	return 0;
+}
+。。。。。。。。。。。。
+
 
