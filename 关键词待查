@@ -51,6 +51,9 @@ ABC理念：
 	template<class T1,class T2>
 	...
 	person<string,int>p1("孙悟空",999)
+	dd类模板，其实是类的构造函数的模板？
+
+	
 	
 
 
