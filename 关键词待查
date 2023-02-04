@@ -88,6 +88,10 @@ string类
 
 
 标准模板库/泛型编程
+
+这是一个不错的全STL的讲解。
+https://blog.csdn.net/trisomydroplets/article/details/125219309
+
 ad hoc多态，参数多态
 STL基本概念
 STL(Standard Template Library)，标准模板库
@@ -125,10 +129,23 @@ STL六大组件
 
 
 模板类vector
-泛型编程，迭代器，容器
-算法，算法组
-其他库，vector，array
-使用STL
+
+
+相同点：vector和array是容器；三者均可以使用下表运算符对元素进行操作，即vector和array都针对下标运算符[]进行了重载；三者在内存的方面都使用连续内存，即在vector和array的底层存储结构均使用数组不同点：array 定义的时候必须定义数组的元素个数为常量表达式，而vector 可为变量表达式；vector属于变长容器，即可以根据数据的插入删除重新构建容器容量；但array和数组属于定长容量。vector和array在声明变量后，在生命周期完成后，会自动地释放其所占用的内存。对于数组，如果是采用new[]申请的内存空间，必须在使用delete[]完毕后手动释放其内存。array对象和数组存储在相同的内存区域（栈）中，vector对象存储在自由存储区（堆）
+
+
+泛型编程，迭代器，容器，算法，算法组
+其他库，vector，array，valarray
+
+容器和数组差不多。各种不同的数组。迭代器，是一些指针。算法，是可以节省很多性能的东西。
+算法：
+find()
+equal_range()
+sort()
+copy()
+swap()
+
+
 
 
 
@@ -462,5 +479,50 @@ int main()
 	return 0;
 }
 。。。。。。。。。。。。
+
+
+
+----------------
+valarray示例：
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <array>
+#include <complex>
+#include <valarray>	// 引入头文件
+using namespace std;
+
+// 打印valarray
+template <typename T> void printValarray(const valarray<T>& va)
+{
+	for (int i = 0; i < va.size(); i++)
+		cout << va[i] << "  ";
+	cout << endl; 
+}
+
+void main()
+{
+	// 创建一个大小为4的valarray
+	valarray<int> val(4);
+	printValarray(val);	// 输出：0 0 0 0
+
+	// 创建一个大小为4、值全为3的valarray
+	valarray<int>va2(3, 4);
+	printValarray(va2); // 输出：3 3 3 3
+
+	// 使用数组初始化valarray
+	int ia[] = { 1,2,3,4,5,687585 };
+	valarray<int> va3(ia, sizeof(ia) / sizeof(ia[0]));
+	printValarray(va3); // 输出：1 2 3 4 5 6
+
+	// 使用数组创建大小为4的valarray
+	valarray<int>va4(ia + 1, 4);
+	printValarray(va4); // 输出： 2 3 4 5
+
+	// 使用valarray进行数学运算
+	val = va2 * va4+va4*va4;
+	printValarray(val);  // 输出： 10 18 28 40
+}
 
 
