@@ -1,9 +1,55 @@
-is-a关系
+is-a关系，has-a关系，is-like-a关系。
+ ————强调的是什么情况下用继承，什么情况用友元。总结：能不用继承就不用。
+
 构造函数的几种类型：拷贝构造函数，赋值构造函数。构造函数的{}初始化
+    拷贝构造函数：在main（）当中创建实例的时候。参数为之前创建的对象。
+    赋值构造函数：初始化的时候，用拷贝构造函数。已经有两个对象，需要定义（赋值）（实现）的时候，用赋值。
+    
+    浅拷贝vs深拷贝：
+    浅拷贝：直接使用拷贝构造函数。深拷贝：使用赋值构造函数？
+    
+    
 静态联编、动态联编？
-ABC理念
+    动态联编：在程序执行的过程当中，才能确定要调用case1还是case2。
+    
+    
+    
+虚函数？
+    做API的时候，再学。
+
+
+一个冒号的两种用法：
+（1）构造函数
+Bullet(int a,int b):speed(a),speed(b){}
+(2)继承
+Class Cat: public Animal{}
+
+
+
+    
+    
+ABC理念：
+（1）普通函数
+（2）虚函数
+（3）纯虚函数
+（4）包含纯虚函数的类
+（5）接口 ：接口（抽象类 通常称为 ABC）
+至少有一个函数被声明为纯虚函数，则这个类就是抽象类
+是为了给其他类提供一个可以继承的适当的基类。抽象类不能被用于实例化对象，它只能作为接口使用。
+一个 ABC 的子类需要被实例化，则必须实现每个虚函数
+抽象基类为所有的外部应用程序提供一个适当的、通用的、标准化的接口。然后，派生类通过继承抽象基类，就把所有类似的操作都继承下来。
+
+
+
 包含对象成员的类？
+    类里有其他对象则该对象叫成员对象；有成员对象的类叫 封闭类。
+    汽车类里面，包含了轮胎类“的实例化的对象”；轮胎类是成员对象      汽车类，叫做封闭类。
+    封闭类，要尽量定义构造函数。因为里面包含的类（好吧，也就是专有名词“成员对象”），需要定义（实现）
+    
+  
 类模板？
+
+
 string类
 标准模板库
 智能指针模板类
@@ -12,3 +58,103 @@ string类
 算法，算法组
 其他库，vector，array
 使用STL
+
+
+
+-------------------------------------------
+虚函数：增加或者去掉virtual，显示结果不同
+
+#include<iostream>
+using namespace std;
+class Father {
+public:
+	virtual void display() {
+		cout << "Father::display()\n";
+	}
+
+	void fatherShowDisplay() {
+		display();
+	}
+};
+class Son :public Father {
+public:
+
+	void display() {
+		cout << "Son::display()\n";
+	}
+};
+
+int main() {
+	Son son;                  
+	son.fatherShowDisplay();   
+}
+
+
+#include<iostream>
+using namespace std;
+// 基类 Father
+class Father {
+public:
+	// 定义了虚函数
+	void virtual  display() {
+		cout << "Father::display()\n";
+	}
+};
+
+// 子类Son
+class Son :public Father {
+public:
+	// 覆盖基类中的display函数
+	void display() {
+		cout << "Son::display()\n";
+	}
+};
+
+int main() {
+	Father* fp;     // 定义基类指针
+	Son son;        // 子类对象
+	fp = &son;        // 使基类指针指向子类对象
+	fp->display();  // 通过基类指针想调用子类中覆盖的display函数
+  
+  
+  
+  或许，很多小伙伴都会有这样一个疑问：如果想调用子类中的覆盖函数，直接通过子类对象，或者指向子类对象的子类指针来调用，不就没这个烦恼了吗？要虚函数还有什么用呢？
+其实不然，虚函数的实际意义非常之大。比如在实际开发过程中，会用到别人封装好的框架和类库，我们可以通过继承其中的类，并覆盖基类中的函数，来实现自定义的功能。
+但是，有些函数是需要框架来调用，并且API需要传入基类指针类型的参数。而使用虚函数就可以，将指向子类对象的基类指针来作为参数传入API，让API能够通过基类指针，来调用我们自定义的子类函数。这就是多态性的真正体现。
+
+
+-----------------
+成员对象和封闭类：
+class CTyre  // 轮胎类
+{
+public:
+	// 有参数构造函数
+	// 初始化成员变量m_radius和m_width
+	CTyre(int r, int w) :m_radius(r), m_width(w) { }
+private:
+	int m_radius; // 半径
+	int m_width;  // 宽度
+};
+
+class CEngine // 引擎类
+{
+	// 默认会有无参数构造函数
+};
+
+class CCar // 汽车类 -- 封闭类
+{
+public:
+	// 有参数构造函数
+	// 对成员变量m_price初始化，对成员对象tyre初始化
+	CCar(int p, int tr, int tw) :m_price(p), tyre(tr, tw) {}
+private:
+	int m_price;    // 价格
+	CTyre tyre;     // 成员对象
+	CEngine engine; // 成员对象
+};
+
+int main()
+{
+	CCar car(10000, 20, 50);
+	return 0;
+}
