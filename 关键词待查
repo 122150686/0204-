@@ -48,6 +48,10 @@ ABC理念：
     
   
 类模板？
+	template<class T1,class T2>
+	...
+	person<string,int>p1("孙悟空",999)
+	
 
 
 string类
@@ -158,3 +162,36 @@ int main()
 	CCar car(10000, 20, 50);
 	return 0;
 }
+
+
+-----------------------
+类模板：
+
+#include <string>
+#include <iostream>
+using namespace std;
+//类模板
+template<class T1, class T2>
+class Person
+{
+public:
+	Person(T1 name, T2 age)
+	{
+		this->m_name = name;
+		this->m_age = age;
+	}
+
+	void showPerson()
+	{
+		cout << "name:" << this->m_name << "age:" << this->m_age << endl;
+	}
+	T1 m_name;
+	T2 m_age;
+};
+
+void main()
+{
+	Person<string, int>p1("孙悟空", 999);
+	p1.showPerson();
+}
+
